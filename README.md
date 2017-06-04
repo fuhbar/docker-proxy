@@ -3,12 +3,24 @@
 
 This WIP does not work. It strives for encapsulating all the routing stuff into
 a container which later on as a privileged one is able to establish required
-routing infrastructure in terms of routing tables, iptables rules, etc. pp. 
+routing infrastructure in terms of routing tables, iptables rules, etc. pp.
 
 Reason for these efforts is to make this portable across different platforms -
 even for those which do not have Linux as an explicit host system (see docker
 for mac).
 
+Changes:
+
+* Create `docker-compose.yml`
+* Put `run.sh` as `routing.sh` into some kind of initialization container
+* Due to this change we needed a way to detect the ip address of the actual
+  squid container. Added a lean webserver and a shell script which provides the
+  container ip address via HTTP. Docker4Mac does not use the docker builtin
+  networking insofar, that `docker inspect <sha>` does not return the proper
+  address allocated for the squid container.
+* Extend original behaviour to setups which using their own bridging device
+* Make effective docker image way smaller by condensing the build into a single
+  layer which prior of writing cleans up all the temporary build dependencies
 
 
 # docker-proxy
