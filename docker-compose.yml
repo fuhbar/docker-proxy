@@ -1,0 +1,35 @@
+---
+
+version: '3'
+
+services: 
+  proxy:
+    image: docker-proxy:latest
+    restart: always
+    build:
+      context: .
+    ports:
+      - 3128:3128
+      - 3129:3129
+      - 3130:3130
+      - 8000:8000
+    environment:
+      - WEBFS_PORT=8000
+    privileged: true
+    labels:
+      - app=docker-proxy
+      - role=squid
+
+  routing:
+    image: docker-proxy:latest
+    command: sleep 100000
+    depends_on: 
+      - proxy
+    volumes:
+      - "$PWD/routing.sh:/usr/local/bin/routing.sh"
+      - /var/run/docker.sock:/var/run/docker.sock
+    network_mode: "host"
+    privileged: true
+    labels:
+      - app=docker-proxy
+      - role=routing

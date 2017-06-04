@@ -21,7 +21,7 @@ function gen-cert() {
 }
 
 function start-routing() {
-    # Setup the NAT rule that enables transparent proxying
+    # Setup the NAT rule that enables transparent proxying within the squid container
     IPADDR=$(/sbin/ip -o -f inet addr show eth0 | awk '{ sub(/\/.+/,"",$4); print $4 }')
     iptables -t nat -A PREROUTING -p tcp --dport 80 -j DNAT --to-destination ${IPADDR}:3129
     iptables -t nat -A PREROUTING -p tcp --dport 443 -j DNAT --to-destination ${IPADDR}:3130
@@ -38,6 +38,8 @@ function init-cache() {
 gen-cert || exit 1
 start-routing || exit 1
 init-cache
-
+echo "Starting colocated webfsd ..."
+webfsd -4 -F -j -p 8000 -l /dev/stdout -r /usr/local -x /bin/  & 
+echo "Starting squid ..."
 squid3
 tail -f /var/log/squid3/access.log /var/log/squid3/cache.log

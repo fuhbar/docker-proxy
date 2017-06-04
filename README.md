@@ -1,3 +1,16 @@
+
+# WIP - Warning
+
+This WIP does not work. It strives for encapsulating all the routing stuff into
+a container which later on as a privileged one is able to establish required
+routing infrastructure in terms of routing tables, iptables rules, etc. pp. 
+
+Reason for these efforts is to make this portable across different platforms -
+even for those which do not have Linux as an explicit host system (see docker
+for mac).
+
+
+
 # docker-proxy
 
 Transparent caching proxy server for Docker containers, run in a Docker
